@@ -17,7 +17,7 @@
         else _input += input;
     });
 
-    process.stdin.on            ("end", () => {                                                         //  useless on windows (sess above)
+    process.stdin.on            ("end", () => {                                                         //  useless on windows (see above)
         processData(_input);
     });
 
