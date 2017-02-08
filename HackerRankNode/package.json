@@ -4,6 +4,11 @@
     "description": "HackerRankNode",
     "main": "app.js",
     "author": {
-        "name": "i5"
+        "name": "Paolo Lioy"
+    },
+    "dependencies": {
+        "string_prototypes": "",
+        "left_pad": "",
+        "w4it": ""
     }
 }

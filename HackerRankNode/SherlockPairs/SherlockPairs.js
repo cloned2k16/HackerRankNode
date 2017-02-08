@@ -22,7 +22,7 @@
     }
 //  ----------------------------------- --------------------------- --------------------------------
     SherlockPairs       .Solution       = (input)               =>  {
-        var lines= input.splitLines();                                                                  //  split lines either Linux or Windows Style!
+        var lines= input.split(/\r?\n/);                                                                //  split lines either Linux or Windows Style!
         var nt=lines[0];
         var pos=1;
         var res=""

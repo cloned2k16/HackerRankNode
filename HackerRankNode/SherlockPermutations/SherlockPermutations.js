@@ -6,6 +6,7 @@
     };
 
     SherlockPermutations        .Solution   = (input) => {
+        var lines= input.split(/\r?\n/);                                                                //  split lines either Linux or Windows Style!
         console.log(123);
     }
 //  ----------------------------------- --------------------------- --------------------------------

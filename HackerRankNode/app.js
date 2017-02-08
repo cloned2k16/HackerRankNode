@@ -1,23 +1,24 @@
 'use strict';
 //  ----------------------------------- --------------------------- --------------------------------
-    var fs                      = require('fs');
+    var fs                              = require ('fs');
+    var w4it                            = require ('w4it');
+    var leftPad                         = require ('left_pad');
 //  ----------------------------------- --------------------------- --------------------------------
-    var SherlockPairs           = require('./SherlockPairs');
-    var SherlockPermutations    = require('./SherlockPermutations');
+    var SherlockPairs                   = require ('./SherlockPairs/SherlockPairs');
+    var SherlockPermutations            = require ('./SherlockPermutations/SherlockPermutations');
 //  ----------------------------------- --------------------------- --------------------------------
-    String.prototype.splitLines = function ()  { return this.split(/\r?\n/); }                      //  !!
+    String.prototype.splitLines         = function ()  { return this.split(/\r?\n/); }                      //  !!
 //  ----------------------------------- --------------------------- --------------------------------
-    var Fake                    = {
-        Name                    :   'Fake'
-    ,   version                 :   'NONE'
-    ,   Solution                :   (input)  => { console.log("Sorry.. I'm not supposed to solve anything!")}
+    var Fake                            = {
+        Name                            :   'Fake'
+    ,   version                         :   'NONE'
+    ,   Solution                        :   (input)  => { console.log("Sorry.. I'm not supposed to solve anything!")}
     }
 //  ----------------------------------- --------------------------- --------------------------------
-    var Solution                = Fake;
-    var EOT                     = 4;
+    var Solution                        = Fake;
+    var EOT                             = 4;
 //  ----------------------------------- --------------------------- --------------------------------
-    var processData             = (input) =>  {
-        console.log('using: '+Solution.Name);
+    var processData                     = (input) =>  {
         var console_log             = console.log;
         var res="";  
         console.log = function (r) {
@@ -29,62 +30,108 @@
         return res;
     }
 //  ----------------------------------- --------------------------- --------------------------------
-    Solution = SherlockPairs;
-    //Solution = SherlockPermutations;
+    var procQueue                       = [];   
+    var procQuInProg                    = false;
+    var queueProcess                    = (solutionObj, tstNN, data , callBack)     => {
+        var pair = { d: data , f: callBack, o: solutionObj , n: tstNN };
+        procQueue.push(pair);
+        if (!procQuInProg) doProcessQueue();
+    }
+
+
+    var doProcessQueue = () => {
+        procQuInProg=true;
+        while ( procQueue.length > 0 ) {
+           var runTest  =   procQueue[0];
+           var data     =   runTest.d;
+           var cb       =   runTest.f;
+               Solution =   runTest.o;
+           var res      =   processData(data);
+           cb(runTest,res); 
+           procQueue.shift();
+        }  
+        procQuInProg=false;
+    }
+
 //  ----------------------------------- --------------------------- --------------------------------
-    fs.readFile('input00.txt', 'utf8', (err,data) => {
-        if (err) {
-            console.log("Error: "+err);
-            return -1;
+    var doTest                          = (solutionObj, tstList) => {
+        var nT=tstList.length;
+        for (var tn=0; tn < nT; tn++) {
+            var tstNN=leftPad(tstList[tn],2,'0');
+            (function (tstNN,solutionObj) {
+                var inFile =solutionObj.Name+'/input' +tstNN+'.txt';
+                fs.readFile(inFile, 'utf8', (err,data) => {
+                    if (err) {
+                        console.log("Error: "+err);
+                        return;
+                    }
+
+                 queueProcess(solutionObj, tstNN, data, function (runTest,res){ 
+
+                    var outFile=solutionObj.Name+'/output'+tstNN+'.txt';
+                    fs.readFile( outFile, 'utf8', function ( err, data ) {
+                        if ( err ) {
+                            console.log("Error: "+err);
+                            return;                        
+                        }
+                        var outLines=data.splitLines();
+                        var resLines=res.splitLines();
+                        var outN=outLines.length;
+                        var resN=resLines.length;
+                        if ( outN !=  resN ) {
+                            console.log("Error: different result lines: "+outN+" != "+resN);
+                            console.log("["+res+"]");
+                            return;
+                        }   
+                        var errAny=false;
+                        for ( var ln = 0; ln < outN; ln++ ) {
+                            if ( outLines[ln] != resLines[ln] ) {
+                                errAny=true;
+                                console.log("res n."+(ln+1)+" ERROR ("+outLines[ln]+" != "+resLines[ln]+")");
+                            }     
+                        }
+                        if (! errAny) console.log ("["+runTest.n+"]."+runTest.o.Name+" SUCCESS!");
+                    });
+                 });
+                });
+            })(tstNN,solutionObj);
         }
-        
-        var res=processData(data);
-
-        fs.readFile( 'output00.txt', 'utf8', ( errd, data ) => {
-            if ( err ) {
-                console.log("Error: "+err);
-                return -1;
-            }
-            var outLines=data.splitLines();
-            var resLines=res.splitLines();
-            var outN=outLines.length;
-            var resN=resLines.length;
-            if ( outN !=  resN ) {
-                console.log("Error: different result lines: "+outN+" != "+resN);
-                console.log("["+res+"]");
-                return;
-            }   
-            var errAny=false;
-            for ( var ln = 0; ln < outN; ln++ ) {
-                if ( outLines[ln] != resLines[ln] ) {
-                    errAny=true;
-                    console.log("res n."+(ln+1)+" ERROR ("+outLines[ln]+" != "+resLines[ln]+")");
-                }     
-            }
-            if (! errAny) console.log ("SUCCESS!");
-        });
-     });
-
+    }
+//  ----------------------------------- --------------------------- --------------------------------
+//  ----------------------------------- --------------------------- --------------------------------
 //  ----------------------------------- --------------------------- --------------------------------
 //  ----------------------------------- --------------------------- --------------------------------
 //  Interactive mode!
 //  ----------------------------------- --------------------------- --------------------------------
-/*  
-    var _input                  = "";
-    process.stdin.resume        ();
-    process.stdin.setEncoding   ("ascii");
+    var runInteractive                  = () =>                     {
+        var _input                  = "";
+        process.stdin.resume        ();
+        process.stdin.setEncoding   ("ascii");
    
-    process.stdin.on            ("data", (input) => {
-        if ( input.charCodeAt(0) == EOT ) {                                                             //  windows doesn't catch EOT !!
+        process.stdin.on            ("data", (input) => {
+            if ( input.charCodeAt(0) == EOT ) {                                                             //  windows doesn't catch EOT !!
+                var res=processData(_input);
+                console.log(res);
+            }    
+            else _input += input;
+        });
+
+        process.stdin.on            ("end", () => {                                                         //  useless on windows (see above)
             var res=processData(_input);
             console.log(res);
-        }    
-        else _input += input;
-    });
-
-    process.stdin.on            ("end", () => {                                                         //  useless on windows (see above)
-        var res=processData(_input);
-        console.log(res);
-    });
-*/
+        });
+    }
 //  ----------------------------------- --------------------------- --------------------------------
+    var DONE=false;
+    var main                            = () =>                     {
+        //runInteractive();
+
+        doTest (SherlockPairs           , [ 0 ,3  ] );
+        doTest (SherlockPermutations    , [ 0  ] );
+           
+        
+        
+    }
+//  ----------------------------------- --------------------------- --------------------------------
+
+main();
