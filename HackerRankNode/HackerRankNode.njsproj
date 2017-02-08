@@ -30,6 +30,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="SherlockPairs.js" />
+    <Compile Include="SherlockPermutations.js" />
+    <Content Include="input00.txt" />
+    <Content Include="output00.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>

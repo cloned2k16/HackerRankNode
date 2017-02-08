@@ -1,9 +1,9 @@
 {
-  "name": "hacker-rank-node",
-  "version": "0.0.0",
-  "description": "HackerRankNode",
-  "main": "app.js",
-  "author": {
-    "name": "i5"
-  }
+    "name": "hacker-rank-node",
+    "version": "0.0.0",
+    "description": "HackerRankNode",
+    "main": "app.js",
+    "author": {
+        "name": "i5"
+    }
 }
