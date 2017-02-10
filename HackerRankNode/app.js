@@ -37,7 +37,9 @@
         procQueue.push(pair);
         if (!procQuInProg) doProcessQueue();
     }
-
+    
+    var _log                            = function () {  Function.prototype.apply.apply(console.log   , [console, arguments]); }
+    var _err                            = function () {  Function.prototype.apply.apply(console.error , [console, arguments]); }
 
     var doProcessQueue = () => {
         procQuInProg=true;
@@ -62,7 +64,7 @@
                 var inFile =solutionObj.Name+'/input' +tstNN+'.txt';
                 fs.readFile(inFile, 'utf8', (err,data) => {
                     if (err) {
-                        console.log("Error: "+err);
+                        _err("Error: "+err);
                         return;
                     }
 
@@ -71,7 +73,7 @@
                     var outFile=solutionObj.Name+'/output'+tstNN+'.txt';
                     fs.readFile( outFile, 'utf8', function ( err, data ) {
                         if ( err ) {
-                            console.log("Error: "+err);
+                            _err("Error: "+err);
                             return;                        
                         }
                         var outLines=data.splitLines();
@@ -79,27 +81,24 @@
                         var outN=outLines.length;
                         var resN=resLines.length;
                         if ( outN !=  resN ) {
-                            console.log("Error: different result lines: "+outN+" != "+resN);
-                            console.log("["+res+"]");
+                            _err("Error: different result lines: "+outN+" != "+resN);
+                            _err("["+res+"]");
                             return;
                         }   
                         var errAny=false;
                         for ( var ln = 0; ln < outN; ln++ ) {
                             if ( outLines[ln] != resLines[ln] ) {
                                 errAny=true;
-                                console.log("res n."+(ln+1)+" ERROR ("+outLines[ln]+" != "+resLines[ln]+")");
+                                _err("res n."+(ln+1)+" ERROR ("+outLines[ln]+" != "+resLines[ln]+")");
                             }     
                         }
-                        if (! errAny) console.log ("["+runTest.n+"]."+runTest.o.Name+" SUCCESS!");
+                        if (! errAny) _log ("["+runTest.n+"]."+runTest.o.Name+" SUCCESS!");
                     });
                  });
                 });
             })(tstNN,solutionObj);
         }
     }
-//  ----------------------------------- --------------------------- --------------------------------
-//  ----------------------------------- --------------------------- --------------------------------
-//  ----------------------------------- --------------------------- --------------------------------
 //  ----------------------------------- --------------------------- --------------------------------
 //  Interactive mode!
 //  ----------------------------------- --------------------------- --------------------------------
@@ -122,16 +121,15 @@
         });
     }
 //  ----------------------------------- --------------------------- --------------------------------
-    var DONE=false;
+//  ----------------------------------- --------------------------- --------------------------------
+//  MAIN ------------------------------
+//  ----------------------------------- --------------------------- --------------------------------
     var main                            = () =>                     {
         //runInteractive();
 
         doTest (SherlockPairs           , [ 0 ,3  ] );
         doTest (SherlockPermutations    , [ 0  ] );
-           
-        
-        
+       
     }
 //  ----------------------------------- --------------------------- --------------------------------
-
-main();
+    main();
