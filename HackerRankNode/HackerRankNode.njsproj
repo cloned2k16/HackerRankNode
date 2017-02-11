@@ -29,15 +29,23 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmicCrush\AlgorithmicCrush.js" />
     <Compile Include="app.js" />
     <Compile Include="SherlockPairs\SherlockPairs.js" />
     <Compile Include="SherlockPermutations\SherlockPermutations.js" />
+    <Content Include="AlgorithmicCrush\input07.txt" />
+    <Content Include="AlgorithmicCrush\output07.txt" />
     <Content Include="SherlockPairs\input00.txt" />
+    <Content Include="SherlockPairs\input03.txt" />
     <Content Include="SherlockPairs\output00.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="SherlockPairs\output03.txt" />
+    <Content Include="SherlockPermutations\input00.txt" />
+    <Content Include="SherlockPermutations\output00.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="AlgorithmicCrush\" />
     <Folder Include="SherlockPermutations\" />
     <Folder Include="SherlockPairs\" />
   </ItemGroup>

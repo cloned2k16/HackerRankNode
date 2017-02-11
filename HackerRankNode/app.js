@@ -6,6 +6,7 @@
 //  ----------------------------------- --------------------------- --------------------------------
     var SherlockPairs                   = require ('./SherlockPairs/SherlockPairs');
     var SherlockPermutations            = require ('./SherlockPermutations/SherlockPermutations');
+    var AlgorithmicCrush                = require ('./AlgorithmicCrush/AlgorithmicCrush');
 //  ----------------------------------- --------------------------- --------------------------------
     String.prototype.splitLines         = function ()  { return this.split(/\r?\n/); }                      //  !!
 //  ----------------------------------- --------------------------- --------------------------------
@@ -125,10 +126,13 @@
 //  MAIN ------------------------------
 //  ----------------------------------- --------------------------- --------------------------------
     var main                            = () =>                     {
+        //Solution=SherlockPairs;
         //runInteractive();
 
         doTest (SherlockPairs           , [ 0 ,3  ] );
         doTest (SherlockPermutations    , [ 0  ] );
+        doTest (AlgorithmicCrush        , [ 7  ] );
+
        
     }
 //  ----------------------------------- --------------------------- --------------------------------
